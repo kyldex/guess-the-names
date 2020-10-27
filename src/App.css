@@ -27,9 +27,13 @@ select:focus {
 }
 
 .app {
+  margin-top: 5rem;
+}
+
+.main {
   display: flex;
   justify-content: center;
-  margin-top: 5rem;
+  align-items: center;
 }
 
 .name {
@@ -51,4 +55,9 @@ select:focus {
 
 .keyboard-inner button {
   width: 30px;
+}
+
+.remaining-attempts {
+  margin-top: 3rem;
+  text-align: center;
 }

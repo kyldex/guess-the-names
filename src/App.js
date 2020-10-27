@@ -16,6 +16,23 @@ const NAMES_TO_FIND = [
   'THE WHO'
 ];
 
+function RestartButton() {
+  return (
+    <button
+      type="button"
+
+    >
+      Restart
+    </button>
+  );
+}
+
+function RemainingAttempts(props) {
+  return (
+    <p>{`Remaining attempts : ${props.remainingAttempts}`}</p>
+  );
+}
+
 function KeyboardLetter(props) {
   return (
     <button
@@ -26,12 +43,6 @@ function KeyboardLetter(props) {
       {props.letter}
     </button>
   );
-}
-
-function RestartButton() {
-  return (
-    <button type="button">Restart</button>
-  )
 }
 
 function Name(props) {
@@ -128,6 +139,7 @@ export default class App extends React.Component {
       nameToFind: '',
       usedLetters: new Set(),
       computedDisplay: '',
+      remainingAttempts: 15,
       gameIsOver: false
     };
   }
@@ -141,12 +153,27 @@ export default class App extends React.Component {
 
   // Returns the string with hidden letters
   computeDisplay(nameToFind, usedLetters) {
-    return nameToFind.replace(/\w/g, (letter) => (usedLetters.has(letter) ? letter : '_'));
+    return nameToFind.replace(/\w/g, (currentLetter) => (usedLetters.has(currentLetter) ? currentLetter : '_'));
   }
 
   handleLetterClick(letter) {
-    this.setState({ usedLetters: this.state.usedLetters.add(letter) });
-    this.setState({ computedDisplay: this.computeDisplay(this.state.nameToFind, this.state.usedLetters)});
+    if (!this.state.nameToFind.includes(letter)) {
+      this.setState((prevState) => (
+        { remainingAttempts: prevState.remainingAttempts - 1 }
+      ));
+      this.setState((prevState) => {
+        if (prevState.remainingAttempts === 0) {
+          return { gameIsOver: true };
+        }
+      });
+    } else {
+      this.setState(() => (
+        { usedLetters: this.state.usedLetters.add(letter) }
+      ));
+      this.setState((prevState) => (
+        { computedDisplay: this.computeDisplay(this.state.nameToFind, prevState.usedLetters) }
+      ));
+    }
   }
 
   componentWillMount() {
@@ -161,11 +188,16 @@ export default class App extends React.Component {
   render() {
     return (
       <div className="app">
-        <Name computedDisplay={this.state.computedDisplay}/>
-        <Keyboard
-          gameIsOver={this.state.gameIsOver}
-          onClick={(letter) => this.handleLetterClick(letter)}
-        />
+        <div className="main">
+          <Name computedDisplay={this.state.computedDisplay}/>
+          <Keyboard
+            gameIsOver={this.state.gameIsOver}
+            onClick={(letter) => this.handleLetterClick(letter)}
+          />
+        </div>
+        <div className="remaining-attempts">
+          <RemainingAttempts remainingAttempts={this.state.remainingAttempts}/>
+        </div>
       </div>
     );
   }
