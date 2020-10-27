@@ -16,20 +16,53 @@ const NAMES_TO_FIND = [
   'THE WHO'
 ];
 
-function RestartButton() {
+function RemainingAttempts(props) {
+  return (
+    <p>{`Remaining attempts : ${props.remainingAttempts}`}</p>
+  );
+}
+
+function Name(props) {
+  return (
+    <div className="name">
+      <p>{props.computedDisplay}</p>
+    </div>
+  );
+}
+
+function RestartButton(props) {
   return (
     <button
       type="button"
-
+      className="restart-button"
+      onClick={() => props.onClick('restart')}
     >
       Restart
     </button>
   );
 }
 
-function RemainingAttempts(props) {
-  return (
-    <p>{`Remaining attempts : ${props.remainingAttempts}`}</p>
+function GameRestart(props) {
+  return(
+    <>
+      {props.gameIsOver === "won" ? (
+        <div className="game-restart">
+          <p>
+            Well Done! 👏<br/>
+            Why not trying to find another one?
+          </p>
+          <RestartButton onClick={(restart) => props.onClick(restart)} />
+        </div>
+      ) : (
+        <div className="game-restart">
+          <p>
+            Not this time...<br/>
+            Why not trying to find another one?
+          </p>
+          <RestartButton onClick={(restart) => props.onClick(restart)} />
+        </div>
+      )}
+    </>
   );
 }
 
@@ -45,19 +78,14 @@ function KeyboardLetter(props) {
   );
 }
 
-function Name(props) {
-  return (
-    <div className="name">
-      <p>{props.computedDisplay}</p>
-    </div>
-  );
-}
-
 function Keyboard(props) {
   return (
     <div className="keyboard">
       {props.gameIsOver ? (
-        <RestartButton />
+        <GameRestart
+          gameIsOver={props.gameIsOver}
+          onClick={(restart) => props.onClick(restart)}
+        />
       ) : (
         <div className="keyboard-inner">
           <div className="keyboard-row">
@@ -140,7 +168,7 @@ export default class App extends React.Component {
       usedLetters: new Set(),
       computedDisplay: '',
       remainingAttempts: 15,
-      gameIsOver: false
+      gameIsOver: null
     };
   }
 
@@ -156,23 +184,65 @@ export default class App extends React.Component {
     return nameToFind.replace(/\w/g, (currentLetter) => (usedLetters.has(currentLetter) ? currentLetter : '_'));
   }
 
-  handleLetterClick(letter) {
-    if (!this.state.nameToFind.includes(letter)) {
-      this.setState((prevState) => (
-        { remainingAttempts: prevState.remainingAttempts - 1 }
-      ));
-      this.setState((prevState) => {
-        if (prevState.remainingAttempts === 0) {
-          return { gameIsOver: true };
-        }
-      });
-    } else {
+  handleClick(letter) {
+
+    if (letter === 'restart') {
+
       this.setState(() => (
-        { usedLetters: this.state.usedLetters.add(letter) }
+        {
+          nameToFind: '',
+          usedLetters: new Set(),
+          computedDisplay: '',
+          remainingAttempts: 15,
+          gameIsOver: null
+        }
+      ));
+      this.setState(() => (
+        { nameToFind: this.getRandomName(NAMES_TO_FIND) }
       ));
       this.setState((prevState) => (
-        { computedDisplay: this.computeDisplay(this.state.nameToFind, prevState.usedLetters) }
+        { computedDisplay: this.computeDisplay(prevState.nameToFind, prevState.usedLetters) }
       ));
+
+    } else if (!this.state.nameToFind.includes(letter)) {
+
+      if (this.state.usedLetters.has(letter)) {
+        return;
+
+      } else {
+        this.setState((prevState) => (
+          { 
+            usedLetters: prevState.usedLetters.add(letter),
+            remainingAttempts: prevState.remainingAttempts - 1
+          }
+        ));
+        this.setState((prevState) => {
+          // Player has lost the game
+          if (prevState.remainingAttempts === 0) {
+            return { gameIsOver: 'lost' };
+          }
+        });
+      }
+
+    } else {
+
+      if (this.state.usedLetters.has(letter)) {
+        return;
+
+      } else {
+        this.setState((prevState) => (
+          { usedLetters: prevState.usedLetters.add(letter) }
+        ));
+        this.setState((prevState) => (
+          { computedDisplay: this.computeDisplay(this.state.nameToFind, prevState.usedLetters) }
+        ));
+        this.setState((prevState) => {
+          // Player has won the game
+          if (prevState.computedDisplay === prevState.nameToFind) {
+            return { gameIsOver: 'won' };
+          }
+        });
+      }
     }
   }
 
@@ -188,16 +258,18 @@ export default class App extends React.Component {
   render() {
     return (
       <div className="app">
-        <div className="main">
-          <Name computedDisplay={this.state.computedDisplay}/>
-          <Keyboard
-            gameIsOver={this.state.gameIsOver}
-            onClick={(letter) => this.handleLetterClick(letter)}
-          />
+        <div>
+          <h1>Guess The Names</h1>
+          <div className="description">Find the name of the musical artist or the name of the band 🎸</div>
         </div>
+        <Name computedDisplay={this.state.computedDisplay}/>
         <div className="remaining-attempts">
           <RemainingAttempts remainingAttempts={this.state.remainingAttempts}/>
         </div>
+        <Keyboard
+          gameIsOver={this.state.gameIsOver}
+          onClick={(letter) => this.handleClick(letter)}
+        />
       </div>
     );
   }

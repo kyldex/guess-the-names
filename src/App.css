@@ -5,7 +5,7 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Lato', sans-serif;
+  font-family: 'Noto Serif JP', serif;
   font-size: 1rem;
   color: #2C2D31;
   background-color: #f1f1f1;
@@ -27,24 +27,36 @@ select:focus {
 }
 
 .app {
-  margin-top: 5rem;
+  margin-top: 3.5rem;
 }
 
-.main {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.description {
+  margin-top: 2rem;
+  font-size: 1.2rem;
+  text-align: center;
 }
 
 .name {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 200px;
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.name p {
+  font-size: 1.8rem;
+  letter-spacing: 0.15rem;
 }
 
 .keyboard {
-  width: 200px;
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .keyboard-inner {
@@ -53,11 +65,52 @@ select:focus {
   align-items: center;
 }
 
-.keyboard-inner button {
-  width: 30px;
+.keyboard-row {
+  margin-bottom: 0.5rem;
+}
+
+.letter-button {
+  margin-right: 1px;
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+  width: 60px; 
+  color: #f1f1f1;
+  background-color: #4a7ab4;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 200ms ease-out;
+}
+
+.letter-button:hover {
+  background-color: #6793c9;
 }
 
 .remaining-attempts {
-  margin-top: 3rem;
+  margin-top: 2.5rem;
+  font-size: 0.9rem;
   text-align: center;
+}
+
+.game-restart {
+  text-align: center;
+}
+
+.restart-button {
+  margin-top: 1rem;
+  padding: 0.6rem 1rem 0.8rem;
+  font-family: 'Noto Serif JP', serif;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  cursor: pointer;
+  color: #f1f1f1;
+  background-color: #4a7ab4;
+  border: none;
+  border-radius: 4px;
+  transition: 250ms ease-out;
+}
+
+.restart-button:hover {
+  background-color: #6793c9;
 }
