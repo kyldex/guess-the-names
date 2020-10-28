@@ -193,7 +193,7 @@ export default class App extends React.Component {
       nameToFind: '',
       usedLetters: new Set(),
       computedDisplay: '',
-      remainingAttempts: 15,
+      remainingAttempts: 10,
       gameIsOver: null
     };
   }
@@ -219,7 +219,7 @@ export default class App extends React.Component {
           nameToFind: '',
           usedLetters: new Set(),
           computedDisplay: '',
-          remainingAttempts: 15,
+          remainingAttempts: 10,
           gameIsOver: null
         }
       ));
