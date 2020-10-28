@@ -86,6 +86,23 @@ h1 {
   background-color: #6793c9;
 }
 
+.letter-button.disabled {
+  background-color: #787f88;
+  cursor: not-allowed;
+}
+
+.letter-button.disabled:hover {
+  background-color: #787f88;
+}
+
+.letter-button.disabled.good {
+  background-color: #47a89b;
+}
+
+.letter-button.disabled.good:hover {
+  background-color: #47a89b;
+}
+
 .remaining-attempts {
   margin-top: 2.5rem;
   font-size: 0.9rem;

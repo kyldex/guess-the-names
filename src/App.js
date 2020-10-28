@@ -66,17 +66,31 @@ function GameRestart(props) {
   );
 }
 
-function KeyboardLetter(props) {
-  return (
-    <button
-      type="button"
-      className="letter-button"
-      onClick={() => props.onClick()}
-    >
-      {props.letter}
-    </button>
-  );
+class KeyboardLetter extends React.Component {
+
+  getClasses(isDisabled, isAGoodLetter) {
+    if (isDisabled && isAGoodLetter) {
+      return "letter-button good disabled";
+    } else if (isDisabled && isAGoodLetter === false) {
+      return "letter-button disabled";
+    } else {
+      return "letter-button";
+    }
+  }
+
+  render () {
+    return (
+      <button
+        type="button"
+        className={this.getClasses(this.props.isDisabled, this.props.isAGoodLetter)}
+        onClick={() => this.props.onClick()}
+      >
+        {this.props.letter}
+      </button>
+    );
+  }
 }
+
 
 function Keyboard(props) {
   return (
@@ -94,6 +108,8 @@ function Keyboard(props) {
                 <KeyboardLetter
                   key={letter}
                   letter={letter}
+                  isDisabled={props.disabledLetters.has(letter) ? true : false}
+                  isAGoodLetter={props.nameToFind.includes(letter) ? true : false}
                   onClick={() => props.onClick(letter)}
                 />
               );
@@ -105,6 +121,8 @@ function Keyboard(props) {
                 <KeyboardLetter
                   key={letter}
                   letter={letter}
+                  isDisabled={props.disabledLetters.has(letter) ? true : false}
+                  isAGoodLetter={props.nameToFind.includes(letter) ? true : false}
                   onClick={() => props.onClick(letter)}
                 />
               );
@@ -116,6 +134,8 @@ function Keyboard(props) {
                 <KeyboardLetter
                   key={letter}
                   letter={letter}
+                  isDisabled={props.disabledLetters.has(letter) ? true : false}
+                  isAGoodLetter={props.nameToFind.includes(letter) ? true : false}
                   onClick={() => props.onClick(letter)}
                 />
               );
@@ -127,6 +147,8 @@ function Keyboard(props) {
                 <KeyboardLetter
                   key={letter}
                   letter={letter}
+                  isDisabled={props.disabledLetters.has(letter) ? true : false}
+                  isAGoodLetter={props.nameToFind.includes(letter) ? true : false}
                   onClick={() => props.onClick(letter)}
                 />
               );
@@ -138,6 +160,8 @@ function Keyboard(props) {
                 <KeyboardLetter
                   key={letter}
                   letter={letter}
+                  isDisabled={props.disabledLetters.has(letter) ? true : false}
+                  isAGoodLetter={props.nameToFind.includes(letter) ? true : false}
                   onClick={() => props.onClick(letter)}
                 />
               );
@@ -149,6 +173,8 @@ function Keyboard(props) {
                 <KeyboardLetter
                   key={letter}
                   letter={letter}
+                  isDisabled={props.disabledLetters.has(letter) ? true : false}
+                  isAGoodLetter={props.nameToFind.includes(letter) ? true : false}
                   onClick={() => props.onClick(letter)}
                 />
               );
@@ -268,6 +294,8 @@ export default class App extends React.Component {
         </div>
         <Keyboard
           gameIsOver={this.state.gameIsOver}
+          nameToFind={this.state.nameToFind}
+          disabledLetters={this.state.usedLetters}
           onClick={(letter) => this.handleClick(letter)}
         />
       </div>
