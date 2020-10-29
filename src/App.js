@@ -66,9 +66,9 @@ function GameRestart(props) {
   );
 }
 
-class KeyboardLetter extends React.Component {
+function KeyboardLetter({ isDisabled, isAGoodLetter, onClick, letter }) {
 
-  getClasses(isDisabled, isAGoodLetter) {
+  function getClasses(isDisabled, isAGoodLetter) {
     if (isDisabled && isAGoodLetter) {
       return "letter-button good disabled";
     } else if (isDisabled && isAGoodLetter === false) {
@@ -78,19 +78,16 @@ class KeyboardLetter extends React.Component {
     }
   }
 
-  render () {
-    return (
-      <button
-        type="button"
-        className={this.getClasses(this.props.isDisabled, this.props.isAGoodLetter)}
-        onClick={() => this.props.onClick()}
-      >
-        {this.props.letter}
-      </button>
-    );
-  }
+  return (
+    <button
+      type="button"
+      className={getClasses(isDisabled, isAGoodLetter)}
+      onClick={onClick}
+    >
+      {letter}
+    </button>
+  );
 }
-
 
 function Keyboard(props) {
   return (
@@ -189,10 +186,12 @@ function Keyboard(props) {
 export default class App extends React.Component {
   constructor(props) {
     super(props);
+    const nameToFind = this.getRandomName(NAMES_TO_FIND);
+    const usedLetters = new Set();
     this.state = {
-      nameToFind: '',
-      usedLetters: new Set(),
-      computedDisplay: '',
+      nameToFind,
+      usedLetters,
+      computedDisplay: this.computeDisplay(nameToFind, usedLetters),
       remainingAttempts: 10,
       gameIsOver: null
     };
@@ -270,15 +269,6 @@ export default class App extends React.Component {
         });
       }
     }
-  }
-
-  componentWillMount() {
-    this.setState(() => (
-      { nameToFind: this.getRandomName(NAMES_TO_FIND) }
-    ));
-    this.setState((prevState) => (
-      { computedDisplay: this.computeDisplay(prevState.nameToFind, prevState.usedLetters) }
-    ));
   }
 
   render() {
